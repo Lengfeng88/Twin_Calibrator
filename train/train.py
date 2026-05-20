@@ -8,7 +8,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from train.dataset import LightDataset
 from train.model   import LightRegressor, denormalize
 
-# ── 超参 ────────────────────────────────────────
+# ── Super Parameter ────────────────────────────────────────
 EPOCHS      = 30
 BATCH_SIZE  = 256
 LR          = 1e-3
@@ -16,10 +16,10 @@ N_SAMPLES   = 8000
 DEVICE      = "cuda" if torch.cuda.is_available() else "cpu"
 SAVE_PATH   = "models/light_regressor.pt"
 
-print(f"训练设备: {DEVICE}")
+print(f"Training equipment: {DEVICE}")
 
-# ── 数据集 ──────────────────────────────────────
-print("生成合成数据集...")
+# ── Dataset ──────────────────────────────────────
+print("Generate synthetic datasets...")
 ds = LightDataset(n_samples=N_SAMPLES, img_size=64)
 n_val = int(len(ds) * 0.15)
 train_ds, val_ds = random_split(ds, [len(ds)-n_val, n_val])
@@ -29,7 +29,7 @@ train_loader = DataLoader(train_ds, batch_size=BATCH_SIZE,
 val_loader   = DataLoader(val_ds,   batch_size=BATCH_SIZE,
                           shuffle=False, num_workers=2)
 
-# ── 模型 / 优化器 ───────────────────────────────
+# ── Model / Optimizer ───────────────────────────────
 model     = LightRegressor().to(DEVICE)
 optimizer = torch.optim.AdamW(model.parameters(), lr=LR,
                                weight_decay=1e-4)
@@ -37,7 +37,7 @@ scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
     optimizer, T_max=EPOCHS)
 criterion = nn.MSELoss()
 
-# ── 训练循环 ────────────────────────────────────
+# ── Training loop ────────────────────────────────────
 best_val = float("inf")
 
 for epoch in range(1, EPOCHS + 1):
@@ -56,7 +56,7 @@ for epoch in range(1, EPOCHS + 1):
     scheduler.step()
     train_loss /= len(train_ds)
 
-    # ── 验证 ──────────────────────────────────
+    # ── verification ──────────────────────────────────
     model.eval()
     lum_errs, cct_errs = [], []
     with torch.no_grad():
@@ -78,6 +78,6 @@ for epoch in range(1, EPOCHS + 1):
     if mae_lum < best_val:
         best_val = mae_lum
         torch.save(model.state_dict(), SAVE_PATH)
-        print(f"  → 保存最优模型 (mae_lum={mae_lum:.2f}%)")
+        print(f"  → Save the optimal model (mae_lum={mae_lum:.2f}%)")
 
-print(f"\n训练完成。最优模型: {SAVE_PATH}")
+print(f"\nTraining complete. Optimal model.: {SAVE_PATH}")
