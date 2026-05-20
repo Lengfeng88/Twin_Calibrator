@@ -5,20 +5,20 @@ from dataclasses import dataclass
 @dataclass
 class ScenePreset:
     name: str
-    base_lum: float   # 0–255 基础亮度
-    cct_k: float      # 色温 K
-    noise_std: float  # 高斯噪声
+    base_lum: float   # 0–255 Basic brightness
+    cct_k: float      # Color temperature K
+    noise_std: float  # Gaussian noise
 
 PRESETS = {
-    "daylight":  ScenePreset("日光灯",  200, 6500, 8),
-    "warm_lamp": ScenePreset("暖光灯",  120, 2700, 6),
-    "office":    ScenePreset("办公室",  160, 4000, 7),
-    "dim":       ScenePreset("昏暗",     60, 3000, 12),
-    "bright":    ScenePreset("强光",    230, 5500, 5),
+    "daylight":  ScenePreset("daylight",  200, 6500, 8),
+    "warm_lamp": ScenePreset("warm_lamp",  120, 2700, 6),
+    "office":    ScenePreset("office",  160, 4000, 7),
+    "dim":       ScenePreset("dim",     60, 3000, 12),
+    "bright":    ScenePreset("bright",    230, 5500, 5),
 }
 
 class MockSensor:
-    """模拟室内摄像头，接口与 Picamera2 兼容。"""
+    """Simulates an indoor camera with an interface compatible with Picamera2."""
     def __init__(self, scene="office", size=(480,640), drift=0.05):
         self.preset = PRESETS[scene]
         self.h, self.w = size
