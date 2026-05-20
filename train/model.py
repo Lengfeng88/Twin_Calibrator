@@ -1,7 +1,7 @@
 import torch, torch.nn as nn
 
 class LightRegressor(nn.Module):
-    """轻量回归网络，输入(1,3,64,64)，输出(1,2)=[lum_norm, cct_norm]"""
+    """A lightweight regression network takes (1,3,64,64) as input and outputs (1,2).=[lum_norm, cct_norm]"""
     def __init__(self):
         super().__init__()
         self.features = nn.Sequential(
